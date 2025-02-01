@@ -8,7 +8,7 @@ public class SignUpUserResponseDto {
 
 		private final String message;
 
-	public SignUpUserResponseDto(User savedUser) {
+	public SignUpUserResponseDto(User s) {
 		this.message = "회원가입이 완료 되었습니다.";
 	}
 }
