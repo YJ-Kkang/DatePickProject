@@ -43,6 +43,13 @@ public class User extends BaseEntity {
 	)
 	private String password;
 
+	@Comment("유저 활성화")
+	@Column(
+		name = "active",
+		nullable = false
+	)
+	private boolean active; // 선언만
+
 	protected User() {
 
 	}
@@ -53,5 +60,10 @@ public class User extends BaseEntity {
 	) {
 		this.email = email;
 		this.password = encryptedPassword;
+		this.active = true; // 생성 시 기본값 true 설정
+	}
+
+	public void inActivate() {
+		this.active = false;
 	}
 }
