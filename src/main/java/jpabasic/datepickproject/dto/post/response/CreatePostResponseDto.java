@@ -7,10 +7,10 @@ import lombok.Getter;
 
 @Getter
 public class CreatePostResponseDto {
-	private String message;
-	private String title;
-	private String content;
-	private LocalDateTime createdAt;
+	private final String message;
+	private final String title;
+	private final String content;
+	private final LocalDateTime createdAt;
 
 	public CreatePostResponseDto(Post savedPost) {
 		this.message = "게시글이 생성되었습니다.";
