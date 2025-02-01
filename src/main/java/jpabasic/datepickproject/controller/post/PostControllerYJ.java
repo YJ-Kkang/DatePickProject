@@ -2,6 +2,8 @@ package jpabasic.datepickproject.controller.post;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
+import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
 import jpabasic.datepickproject.service.post.PostServiceYJ;
 import lombok.RequiredArgsConstructor;
 
@@ -36,4 +39,17 @@ public class PostControllerYJ {
 		return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 	}
 
+	// post 삭제(소프트 딜리트 사용)
+	@DeleteMapping("/{post_id}")
+	public ResponseEntity<DeletePostResponseDto> deletePostAPI(
+		@PathVariable(name = "post_id") Long postId
+	) {
+		// 게시글을 삭제 요청한 유저와 작성한 유저가 같은 유저인지 검증(서비스단...?)
+
+		// postId를 서비스 단으로 넘겨서 검증 및 post 삭제 진행
+		DeletePostResponseDto responseDto = postServiceYJ.deletePostService(postId);
+
+		// HTTP 상태 코드 200(ok)와 함께 responseDto 응답
+		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
 }
