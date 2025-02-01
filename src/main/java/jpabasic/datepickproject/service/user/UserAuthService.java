@@ -52,4 +52,19 @@ public class UserAuthService {
 		return new SignUpUserResponseDto(savedUser);
 
 	}
+	public SignInUserResponseDto signIn(SignInUserRequestDto requestDto) {
+
+	}
+
+	public void resign(String password, String token) {
+
+	}
+
+	public JwtUtil getJwtUtil() {
+		return jwtUtil;
+	}
+
+	public UserRepository getUserRepository() {
+		return userRepository;
+	}
 }
