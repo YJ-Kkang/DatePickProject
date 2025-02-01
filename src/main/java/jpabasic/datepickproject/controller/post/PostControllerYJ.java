@@ -42,12 +42,14 @@ public class PostControllerYJ {
 	// post 삭제(소프트 딜리트 사용)
 	@DeleteMapping("/{post_id}")
 	public ResponseEntity<DeletePostResponseDto> deletePostAPI(
-		@PathVariable(name = "post_id") Long postId
+		@PathVariable(name = "post_id") Long postId,
+		HttpServletRequest request
 	) {
-		// 게시글을 삭제 요청한 유저와 작성한 유저가 같은 유저인지 검증(서비스단...?)
+		// JWT를 통해 인증된 유저의 ID를 request의 attribute에서 가져옴(추후 JWT 구현 방식에 따라 코드 변경 가능성 있음)
+		Long userId = (Long) request.getAttribute("userId");
 
 		// postId를 서비스 단으로 넘겨서 검증 및 post 삭제 진행
-		DeletePostResponseDto responseDto = postServiceYJ.deletePostService(postId);
+		DeletePostResponseDto responseDto = postServiceYJ.deletePostService(postId, userId);
 
 		// HTTP 상태 코드 200(ok)와 함께 responseDto 응답
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
