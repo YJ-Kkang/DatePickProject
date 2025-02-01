@@ -42,4 +42,16 @@ public class User extends BaseEntity {
 		nullable = false
 	)
 	private String password;
+
+	protected User() {
+
+	}
+
+	public User(
+		String email,
+		String encryptedPassword
+	) {
+		this.email = email;
+		this.password = encryptedPassword;
+	}
 }
