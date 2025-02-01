@@ -28,7 +28,7 @@ public class UserAuthController {
 
 	// 유저 회원가입
 	@PostMapping("/signup")
-	public ResponseEntity<SignUpUserResponseDto> signUp(
+	public ResponseEntity<SignUpUserResponseDto> signUpUser(
 		@RequestBody SignUpUserRequestDto requestDto
 	) {
 		SignUpUserResponseDto responseDto = userAuthService.signUp(requestDto);
