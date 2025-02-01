@@ -23,7 +23,7 @@ public class PostServiceYJ {
 		Long userId,
 		CreatePostRequestDto requestDto
 	) {
-		// 유저 id 검증
+		// 유저 id 검증(todo 추후 필터 단에서 로그인할 때 유저 id 검증이 되는 구조라면 아래 로직 삭제할 것 -> 바로 post 생성)
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("유저를 찾을수 없습니다.")); // todo 추후 커스텀 예외 처리로 변경
 
