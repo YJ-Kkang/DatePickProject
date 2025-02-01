@@ -34,3 +34,4 @@ public class Comment extends BaseEntity {
 	@Column(name = "contnet")
 	private String content;
 }
+
