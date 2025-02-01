@@ -52,19 +52,31 @@ public class UserAuthService {
 		return new SignUpUserResponseDto(savedUser);
 
 	}
+
 	public SignInUserResponseDto signIn(SignInUserRequestDto requestDto) {
 
+		// 1. 이메일로 사용자 존재 여부 확인
+		Optional<User> existingUser = userRepository.findByEmail(requestDto.getEmail());
+
+		// 2. 이메일이 존재하지 않으면 예외 처리
+		if (existingUser.isEmpty()) {
+			log.info("이메일을 찾을 수 없습니다. 이메일: {}", requestDto.getEmail());
+			throw new CustomException(ErrorCode.USER_NOT_FOUND);  // 이메일을 찾을 수 없으면 예외 처리
+		}
+		// 3. 비밀번호 확인
+		User user = existingUser.get();
+		if (!bcrypt.matches(requestDto.getPassword(), user.getPassword())) {
+			log.info("비밀번호가 일치하지 않습니다. 이메일: {}", requestDto.getEmail());
+			throw new CustomException(ErrorCode.PASSWORD_MISMATCH);  // 비밀번호가 일치하지 않으면 예외 처리
+		}
+		// 4. JWT 토큰 생성
+		String token = jwtUtil.createToken(user.getEmail());  // 이메일을 기반으로 JWT 토큰 생성
+
+		// 5. JWT 토큰을 포함한 응답 반환
+		return new SignInUserResponseDto(token);  // 생성된 토큰을 응답에 포함시킴
 	}
 
 	public void resign(String password, String token) {
 
-	}
-
-	public JwtUtil getJwtUtil() {
-		return jwtUtil;
-	}
-
-	public UserRepository getUserRepository() {
-		return userRepository;
 	}
 }
