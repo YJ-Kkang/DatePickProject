@@ -2,6 +2,7 @@ package jpabasic.datepickproject.common.utils;
 
 import java.util.Date;
 
+import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,14 +26,23 @@ public class JwtUtil {
 
 	private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
-	// 토큰 생성
-	public String createToken(String email) {
+	private final AbstractErrorController abstractErrorController;
 
+	public JwtUtil(AbstractErrorController abstractErrorController) {
+		this.abstractErrorController = abstractErrorController;
+	}
+
+	// 토큰 생성
+	public String createToken(String email){
 		Date date = new Date();
+
+		// 권한부여 : role 기본값을 'USER'로 설정
+		String userRole = ("ROLE_USER");
 
 		return BEARER_PREFIX +
 			Jwts.builder()
 				.setSubject(email) // 사용자 식별자
+				.claim("role", userRole)  // 사용자 역할을 클레임에 추가
 				.setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 토큰의 만료시간
 				.setIssuedAt(date) // 토큰 발급 시점
 				.signWith(SignatureAlgorithm.HS256, secretKey) // 알고리즘과 시크릿 키
