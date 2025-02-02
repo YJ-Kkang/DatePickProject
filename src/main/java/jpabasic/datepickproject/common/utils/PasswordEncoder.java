@@ -16,12 +16,16 @@ public class PasswordEncoder {
 		return BCrypt.withDefaults().hashToString(BCrypt.MIN_COST, rawPassword.toCharArray());
 	}
 
-	// 로그인 시 사용자가 입력한 비밀번호와 DB에 저장된 암호화된 비밀번호가 일치여부 확인
-	public void matches(String rawPassword, String encodedPassword) {
+	public boolean matches(String rawPassword, String encodedPassword) {
+		// 입력한 비밀번호(rawPassword)와 저장된 암호화된 비밀번호(encodedPassword) 비교
 		BCrypt.Result result = BCrypt.verifyer().verify(rawPassword.toCharArray(), encodedPassword);
 
-		if (result.verified) {
-			throw new CustomException(ErrorCode.PASSWORD_MISMATCH);  // 비밀번호가 일치하지 않으면 예외 처리
+		// 비밀번호가 일치하지 않으면 false 반환
+		if (!result.verified) {
+			throw new CustomException(ErrorCode.PASSWORD_MISMATCH);  // 비밀번호 불일치 시 예외 처리
 		}
+		// 비밀번호가 일치하면 true 반환
+		return true;
 	}
+
 }
