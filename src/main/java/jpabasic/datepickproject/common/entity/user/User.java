@@ -56,9 +56,11 @@ public class User extends BaseEntity {
 
 	public User(
 		String email,
+		String userName,
 		String encryptedPassword
 	) {
 		this.email = email;
+		this.userName = userName;
 		this.password = encryptedPassword;
 		this.active = true; // 생성 시 기본값 true 설정
 	}
