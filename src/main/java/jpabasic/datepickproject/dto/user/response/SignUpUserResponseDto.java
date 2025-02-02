@@ -5,10 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class SignUpUserResponseDto {
+	private final String email;
+	private final String token;
 
-		private final String message;
-
-	public SignUpUserResponseDto(User s) {
-		this.message = "회원가입이 완료 되었습니다.";
+	// 생성자
+	public SignUpUserResponseDto(User user, String token) {
+		this.email = user.getEmail();
+		this.token = token;
 	}
 }
