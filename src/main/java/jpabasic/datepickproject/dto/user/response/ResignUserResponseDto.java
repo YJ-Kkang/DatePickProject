@@ -7,7 +7,7 @@ public class ResignUserResponseDto {
 
 	private final String message;
 
-	public ResignUserResponseDto(String s) {
+	public ResignUserResponseDto() {
 		this.message = "회원 탈퇴 처리되었습니다.";
 	}
 }
