@@ -47,26 +47,34 @@ public class UserAuthService {
 		// DB에 User 저장
 		User savedUser = userRepository.save(newUser);
 
-		// savedUser 반환
-		return new SignUpUserResponseDto(savedUser);
+		// JWT 토큰 생성 (JwtUtil 사용)
+		String token = jwtUtil.createToken(savedUser.getEmail());
 
+		// savedUser와 token을 반환
+		return new SignUpUserResponseDto(savedUser, token);
 	}
 
 	// 유저 로그인 로직
 	public SignInUserResponseDto signIn(SignInUserRequestDto requestDto) {
 
-		// 1. 비밀번호 확인
-		User user = findUserByEmail(requestDto.getEmail());
-		bcrypt.matches(requestDto.getPassword(), user.getPassword());
+			// 1. 이메일을 기반으로 사용자 찾기
+			User user = findUserByEmail(requestDto.getEmail());
 
-		// 2. JWT 토큰 생성
-		String token = jwtUtil.createToken(user.getEmail());  // 이메일을 기반으로 JWT 토큰 생성
+			// 2. 비밀번호 일치 여부 확인
+			if (!bcrypt.matches(requestDto.getPassword(), user.getPassword())) {
+				// 비밀번호가 일치하지 않으면 예외 처리
+				throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 예시: 비밀번호가 잘못된 경우
+			}
 
-		// 3. JWT 토큰을 포함한 응답 반환
-		return new SignInUserResponseDto(token);  // 생성된 토큰을 응답에 포함시킴
-	}
+			// 3. JWT 토큰 생성
+			String token = jwtUtil.createToken(user.getEmail());  // 이메일을 기반으로 JWT 토큰 생성
 
-	// 유저 탈퇴 로직
+			// 4. JWT 토큰을 포함한 응답 반환 (응답에 토큰을 반환)
+			return new SignInUserResponseDto(token);  // 생성된 토큰을 응답에 포함시킴
+		}
+
+
+		// 유저 탈퇴 로직
 	public void resign(String token, String password) {
 
 			// 1. JWT 토큰에서 이메일 추출
@@ -85,6 +93,7 @@ public class UserAuthService {
 
 		// 중복되는 로직 추출 (로그인 및 회원 탈퇴)
 		public User findUserByEmail(String email) {
+
 			// 이메일로 사용자 존재 여부 확인
 			Optional<User> existingUser = userRepository.findByEmail(email);
 
