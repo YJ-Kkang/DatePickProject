@@ -11,9 +11,9 @@ public class SignInUserRequestDto {
 
 	private final String password;
 
-	public SignInUserRequestDto(String email, String password) {
+	public SignInUserRequestDto(String email, String username, String password) {
 		this.email = email;
-		this.username = email;
+		this.username = username;
 		this.password = password;
 	}
 }

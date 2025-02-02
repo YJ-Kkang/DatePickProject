@@ -11,9 +11,9 @@ public class SignUpUserRequestDto {
 
 	private final String password;
 
-	public SignUpUserRequestDto(String email, String password) {
+	public SignUpUserRequestDto(String email, String username, String password) {
 		this.email = email;
-		this.username = email;
+		this.username = username;
 		this.password = password;
 	}
 }
