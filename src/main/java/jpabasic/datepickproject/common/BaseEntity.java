@@ -52,4 +52,10 @@ public abstract class BaseEntity {
 
 	protected BaseEntity() {
 	}
+
+	// 소프트 딜리트(해당 메서드 호출하면 true가 됨, 기본값은 false)
+	public void markAsDeleted() {
+		this.isDeleted = true;
+		this.deletedAt = LocalDateTime.now();
+	}
 }
