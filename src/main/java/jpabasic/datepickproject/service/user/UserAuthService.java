@@ -41,17 +41,14 @@ public class UserAuthService {
 		// 사용자가 입력한 비밀번호를 암호화
 		String encryptedPassword = bcrypt.encode(requestDto.getPassword());
 
-		// User 객체 생성, 이메일과 암호화된 비밀번호를 설정 -> DB에 저장할 이메일과 비밀번호
-		User newUser = new User(requestDto.getEmail(), encryptedPassword);
+		// User 객체 생성, 이메일과 암호화된 비밀번호를 설정
+		User newUser = new User(requestDto.getEmail(), requestDto.getUsername(), encryptedPassword);
 
 		// DB에 User 저장
 		User savedUser = userRepository.save(newUser);
 
-		// JWT 토큰 생성 (JwtUtil 사용)
-		String token = jwtUtil.createToken(savedUser.getEmail());
-
-		// savedUser와 token을 반환
-		return new SignUpUserResponseDto(savedUser, token);
+		// savedUser 반환
+		return new SignUpUserResponseDto(savedUser);
 	}
 
 	// 유저 로그인 로직
@@ -61,10 +58,7 @@ public class UserAuthService {
 			User user = findUserByEmail(requestDto.getEmail());
 
 			// 2. 비밀번호 일치 여부 확인
-			if (!bcrypt.matches(requestDto.getPassword(), user.getPassword())) {
-				// 비밀번호가 일치하지 않으면 예외 처리
-				throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 예시: 비밀번호가 잘못된 경우
-			}
+			bcrypt.matches(requestDto.getPassword(), user.getPassword());
 
 			// 3. JWT 토큰 생성
 			String token = jwtUtil.createToken(user.getEmail());  // 이메일을 기반으로 JWT 토큰 생성
