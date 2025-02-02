@@ -1,5 +1,8 @@
 package jpabasic.datepickproject.common.entity.post;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,24 +14,63 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jpabasic.datepickproject.common.BaseEntity;
 import jpabasic.datepickproject.common.entity.user.User;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "POST")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
+	/**
+	 *  < 이하 BaseEntity에서 상속받을 요소들 >
+	 *  LocalDateTime created_at "생성일"
+	 *  LocalDateTime upated_at "수정일"
+	 *  LocalDateTime deleted_at "삭제일"
+	 */
+
+	// post 식별자
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "post_title")
+	// 유저 식별자(외래키)
+	@ManyToOne(
+		fetch = FetchType.LAZY,
+		optional = false // user가 항상 필수 필드인 것을 명시
+	)
+	@JoinColumn(
+		name = "user_id",
+		nullable = false
+	)
+	private User user;
+
+	// post 제목
+	@Column(
+		name = "post_title",
+		nullable = false,
+		length = 100 // 제목 길이 제한
+	)
 	private String title;
 
-	@Column(name = "post_content")
+	// post 내용
+	@Column(
+		name = "post_content",
+		nullable = false,
+		length = 2000 // 내용 길이 제한
+	)
 	private String content;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	// todo 좋아요 개수 필드는 의논 후 추가할지 말지 선택
+
+	// 소프트 딜리트(기본값 false | true: 삭제된 post 의미)
+	//베이스 엔티티에 메서드 만들어서 사용.
+
+	// 생성자
+	public Post(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
 }
