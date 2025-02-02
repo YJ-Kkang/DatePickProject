@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jpabasic.datepickproject.common.exception.CustomException;
 import jpabasic.datepickproject.common.exception.ErrorCode;
+import jpabasic.datepickproject.dto.user.requset.ResignUserRequestDto;
 import jpabasic.datepickproject.dto.user.requset.SignInUserRequestDto;
 import jpabasic.datepickproject.dto.user.requset.SignUpUserRequestDto;
 import jpabasic.datepickproject.dto.user.response.ResignUserResponseDto;
@@ -51,7 +52,7 @@ public class UserAuthController {
 	// 유저 탈퇴
 	@DeleteMapping("/resign")
 	public ResponseEntity<ResignUserResponseDto> ResignUser(
-		@RequestBody String password,
+		@RequestBody ResignUserRequestDto requestDto,
 		HttpServletRequest request
 	) {
 		// 1. Authorization 헤더에서 JWT 토큰 추출
@@ -64,10 +65,10 @@ public class UserAuthController {
 		token = token.substring(7); // "Bearer " 부분 제외
 
 		// 2. 유저 탈퇴 서비스 호출
-		userAuthService.resign(token, password);
+		userAuthService.resign(token, requestDto.getPassword());
 
 		// 탈퇴 완료 메시지와 함께 200 OK 응답 반환
-		ResignUserResponseDto responseDto = new ResignUserResponseDto("탈퇴가 완료되었습니다.");
+		ResignUserResponseDto responseDto = new ResignUserResponseDto();
 
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
