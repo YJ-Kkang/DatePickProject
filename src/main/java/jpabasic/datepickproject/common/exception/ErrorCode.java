@@ -26,7 +26,8 @@ public enum ErrorCode {
 	FRIEND_NOT_FOUND(HttpStatus.BAD_REQUEST, "친구를 찾을 수 없습니다."),
 	FRIEND_REQUEST_NOT_AUTHORIZED(HttpStatus.BAD_REQUEST, "요청을 수락하거나 거절할 권한이 없습니다."),
 	UNAUTHORIZED_NOT_ACCESS(HttpStatus.UNAUTHORIZED, "자신의 댓글만 수정할 수 있습니다."),
-	TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다.");
+	TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
+	INVALID_PASSWORD(HttpStatus.BAD_REQUEST,"비밀번호를 잘못 입력하였습니다." );
 
 	private final HttpStatus status;
 	private final String message;
