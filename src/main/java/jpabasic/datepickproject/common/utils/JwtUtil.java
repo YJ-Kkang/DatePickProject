@@ -22,7 +22,7 @@ public class JwtUtil {
 	// JWT 토큰 값 앞에 붙는 접두사
 	public static final String BEARER_PREFIX = "Bearer ";
 
-	private final String secretKey = "yourSecretKey";  // 비밀 키
+	private final String secretKey = "testestestdfns214nkdc2141mkse51s31512tfadsds";  // 비밀 키
 
 	private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
