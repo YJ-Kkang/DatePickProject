@@ -1,10 +1,11 @@
-package jpabasic.datepickproject.config;
+package jpabasic.datepickproject.common.config;
 
-import jpabasic.datepickproject.common.filter.JwtFilter;
-import jpabasic.datepickproject.common.utils.JwtUtil;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import jpabasic.datepickproject.common.filter.JwtFilter;
+import jpabasic.datepickproject.common.utils.JwtUtil;
 
 @Configuration
 public class FilterConfig {
@@ -17,9 +18,9 @@ public class FilterConfig {
 
 	@Bean
 	public FilterRegistrationBean<JwtFilter> jwtFilter() {
-		FilterRegistrationBean<JwtFilter> registrationBean
-			= new FilterRegistrationBean<>(); // JwtFilter가 Spring bean으로 등록
+		FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
 
+		// JwtFilter 인스턴스 생성 후 주입
 		registrationBean.setFilter(new JwtFilter(jwtUtil));  // JwtUtil을 필터에 주입
 
 		registrationBean.addUrlPatterns("/api/*");  // "api/"로 시작하는 모든 URL에 대해 필터를 적용

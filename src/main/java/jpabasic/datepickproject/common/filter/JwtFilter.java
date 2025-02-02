@@ -16,7 +16,6 @@ import jpabasic.datepickproject.common.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Component
 public class JwtFilter implements Filter {
 
 	private final JwtUtil jwtUtil;
