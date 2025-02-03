@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Getter
 @Entity
 @Table(name = "POST")
@@ -73,4 +74,11 @@ public class Post extends BaseEntity {
 		this.title = title;
 		this.content = content;
 	}
+
+	public void updatePost(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
+
 }
+
