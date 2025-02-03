@@ -4,10 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jpabasic.datepickproject.common.entity.post.Post;
+import jpabasic.datepickproject.common.entity.user.User;
 import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
 import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
