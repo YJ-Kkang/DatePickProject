@@ -42,4 +42,30 @@ public class User extends BaseEntity {
 		nullable = false
 	)
 	private String password;
+
+	@Comment("유저 활성화")
+	@Column(
+		name = "active",
+		nullable = false
+	)
+	private boolean active; // 선언만
+
+	protected User() {
+
+	}
+
+	public User(
+		String email,
+		String userName,
+		String encryptedPassword
+	) {
+		this.email = email;
+		this.userName = userName;
+		this.password = encryptedPassword;
+		this.active = true; // 생성 시 기본값 true 설정
+	}
+
+	public void inActivate() {
+		this.active = false;
+	}
 }
