@@ -1,8 +1,5 @@
 package jpabasic.datepickproject.common.entity.post;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -70,7 +67,8 @@ public class Post extends BaseEntity {
 	//베이스 엔티티에 메서드 만들어서 사용.
 
 	// 생성자
-	public Post(String title, String content) {
+	public Post(User user, String title, String content) {
+		this.user = user;
 		this.title = title;
 		this.content = content;
 	}
