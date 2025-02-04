@@ -1,8 +1,5 @@
 package jpabasic.datepickproject.common.entity.post;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -63,7 +60,8 @@ public class Post extends BaseEntity {
 	)
 	private String content;
 
-	// todo 좋아요 개수 필드는 의논 후 추가할지 말지 선택
+	// 게시글에 표시 되는 좋아요 수
+	private Long likeCount = 0L;
 
 	// 소프트 딜리트(기본값 false | true: 삭제된 post 의미)
 	//베이스 엔티티에 메서드 만들어서 사용.
@@ -73,4 +71,10 @@ public class Post extends BaseEntity {
 		this.title = title;
 		this.content = content;
 	}
+
+	public void changePostLike(Long likeCount) {
+		this.likeCount = likeCount;
+	}
+
+
 }
