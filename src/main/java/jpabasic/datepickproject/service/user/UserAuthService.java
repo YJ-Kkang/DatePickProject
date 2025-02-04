@@ -2,6 +2,8 @@ package jpabasic.datepickproject.service.user;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jpabasic.datepickproject.common.entity.user.User;
@@ -100,6 +102,11 @@ public class UserAuthService {
 			throw new CustomException(ErrorCode.USER_NOT_FOUND);  // 사용자를 찾을 수 없으면 예외 처리
 		}
 		return existingUser.get();
+	}
+
+	// 이메일 또는 사용자명으로 부분일치 검색 후 페이징 처리 된 값 반환
+	public Page<User> searchMatchedUsers(String username, String email, Pageable pageable) {
+		return userRepository.findByEmailContainingOrUserNameContaining(username, email, pageable);
 	}
 
 }
