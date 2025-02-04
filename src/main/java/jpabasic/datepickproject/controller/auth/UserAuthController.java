@@ -1,14 +1,19 @@
 package jpabasic.datepickproject.controller.auth;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jpabasic.datepickproject.common.entity.user.User;
 import jpabasic.datepickproject.common.exception.CustomException;
 import jpabasic.datepickproject.common.exception.ErrorCode;
 import jpabasic.datepickproject.dto.user.requset.ResignUserRequestDto;
@@ -47,6 +52,15 @@ public class UserAuthController {
 		SignInUserResponseDto responseDto = userAuthService.signIn(requestDto);
 
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
+
+	// 유저 다건 조회 (이메일과 사용자이름 페이징 처리로 검색한 로직)
+	@GetMapping("/search")
+	public Page<User> searchUsers(
+		@RequestParam(required = false, defaultValue = "") String email,
+		@RequestParam(required = false, defaultValue = "") String username,
+		Pageable pageable) {
+		return userAuthService.searchMatchedUsers(email, username, pageable);
 	}
 
 	// 유저 탈퇴
