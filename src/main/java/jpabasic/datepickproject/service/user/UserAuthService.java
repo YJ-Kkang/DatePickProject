@@ -51,52 +51,55 @@ public class UserAuthService {
 		return new SignUpUserResponseDto(savedUser);
 	}
 
-	// 유저 로그인 로직
 	public SignInUserResponseDto signIn(SignInUserRequestDto requestDto) {
 
-			// 1. 이메일을 기반으로 사용자 찾기
-			User user = findUserByEmail(requestDto.getEmail());
+		// 1. 이메일을 기반으로 사용자 찾기
+		User user = userRepository.findByEmail(requestDto.getEmail())
+			.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));  // 이메일로 유저 찾고 없으면 예외 발생
 
-			// 2. 비밀번호 일치 여부 확인
-			bcrypt.matches(requestDto.getPassword(), user.getPassword());
-
-			// 3. JWT 토큰 생성
-			String token = jwtUtil.createToken(user.getEmail());  // 이메일을 기반으로 JWT 토큰 생성
-
-			// 4. JWT 토큰을 포함한 응답 반환 (응답에 토큰을 반환)
-			return new SignInUserResponseDto(token);  // 생성된 토큰을 응답에 포함시킴
+		// 2. 비밀번호 일치 여부 확인
+		boolean passwordMatches = bcrypt.matches(requestDto.getPassword(), user.getPassword());
+		if (!passwordMatches) {
+			throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 비밀번호 불일치 시 예외 처리
 		}
 
+		// 3. JWT 토큰 생성 (user.getId()는 Long, user.getEmail()은 String)
+		String token = jwtUtil.createToken(user.getId(), user.getEmail());  // 아이디와 이메일을 기반으로 JWT 토큰 생성
 
-		// 유저 탈퇴 로직
+		// 4. JWT 토큰을 포함한 응답 반환 (응답에 토큰을 반환)
+		return new SignInUserResponseDto(token);  // 생성된 토큰을 응답에 포함시킴
+	}
+
 	public void resign(String token, String password) {
 
-			// 1. JWT 토큰에서 이메일 추출
-			String email = jwtUtil.getEmailFromToken(token);
+		// 1. JWT 토큰에서 userId 추출
+		Long userId = jwtUtil.getUserIdFromToken(token);  // userId로 변경
 
-			// 2. 비밀번호 확인
-			User user = findUserByEmail(email);
-			bcrypt.matches(password,user.getPassword());
-
-			// 3. 탈퇴 처리: 사용자의 상태를 "탈퇴"로 변경
-			user.inActivate();  // 'active' 플래그를 false로 설정하여 탈퇴 처리
-			userRepository.save(user);  // DB에 반영
-
-			log.info("사용자가 탈퇴했습니다. 이메일: {}", email);
+		// 2. 비밀번호 확인
+		User user = findUserById(userId);  // 이제 이메일이 아니라 userId로 사용자 찾기
+		boolean passwordMatches = bcrypt.matches(password, user.getPassword());
+		if (!passwordMatches) {
+			throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 비밀번호가 일치하지 않으면 예외 발생
 		}
 
-		// 중복되는 로직 추출 (로그인 및 회원 탈퇴)
-		public User findUserByEmail(String email) {
+		// 3. 탈퇴 처리: 사용자의 상태를 "탈퇴"로 변경
+		user.inActivate();  // 'active' 플래그를 false로 설정하여 탈퇴 처리
+		userRepository.save(user);  // DB에 반영
 
-			// 이메일로 사용자 존재 여부 확인
-			Optional<User> existingUser = userRepository.findByEmail(email);
-
-			// 이메일이 존재하지 않으면 예외 처리
-			if (existingUser.isEmpty()) {
-				log.info("이메일을 찾을 수 없습니다. 이메일: {}", email);
-				throw new CustomException(ErrorCode.USER_NOT_FOUND);  // 이메일을 찾을 수 없으면 예외 처리
-			}
-			return existingUser.get();
-		}
-
+		log.info("사용자가 탈퇴했습니다. userId: {}", userId);
 	}
+
+	public User findUserById(Long userId) {
+
+		// userId로 사용자 존재 여부 확인
+		Optional<User> existingUser = userRepository.findById(userId);
+
+		// userId가 존재하지 않으면 예외 처리
+		if (existingUser.isEmpty()) {
+			log.info("사용자를 찾을 수 없습니다. userId: {}", userId);
+			throw new CustomException(ErrorCode.USER_NOT_FOUND);  // 사용자를 찾을 수 없으면 예외 처리
+		}
+		return existingUser.get();
+	}
+
+}
