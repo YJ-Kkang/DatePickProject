@@ -31,7 +31,7 @@ public class PostServiceYJ {
 			.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.")); // todo 추후 커스텀 예외 처리로 변경(UserNotFoundException)
 
 		// post 생성
-		Post newPost = new Post(requestDto.getTitle(), requestDto.getContent());
+		Post newPost = new Post(user, requestDto.getTitle(), requestDto.getContent());
 
 		// repository에 post 저장
 		Post savedPost = postRepositoryYJ.save(newPost);
