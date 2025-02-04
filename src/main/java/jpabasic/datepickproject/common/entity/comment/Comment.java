@@ -12,8 +12,6 @@ import jakarta.persistence.Table;
 import jpabasic.datepickproject.common.BaseEntity;
 import jpabasic.datepickproject.common.entity.post.Post;
 import jpabasic.datepickproject.common.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
