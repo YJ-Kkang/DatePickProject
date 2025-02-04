@@ -18,7 +18,7 @@ import jpabasic.datepickproject.service.post.PostServiceYJ;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostControllerYJ {
 	private final PostServiceYJ postServiceYJ;
