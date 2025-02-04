@@ -1,8 +1,5 @@
 package jpabasic.datepickproject.common.entity.post;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
