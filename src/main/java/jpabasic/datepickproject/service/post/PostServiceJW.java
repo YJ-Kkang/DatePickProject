@@ -54,9 +54,8 @@ public class PostServiceJW {
 
     @Transactional
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto) {
-        // 토큰에서 유저 아이디 가져옴 -> 유저아이디로 유저 조회 -> 똑같?
 
-        // 토큰에서 추출한 유저아이디 가져오기
+        // 저장한 유저아이디 가져오기
         Long userId = updatePostRequestDto.getUserId();
 
         // 추출한 이메일로 유저를 조회 -> 없으면 예외 발생
