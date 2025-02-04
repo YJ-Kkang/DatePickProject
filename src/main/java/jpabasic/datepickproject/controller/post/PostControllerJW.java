@@ -25,38 +25,29 @@ public class PostControllerJW {
     // 게시글 다건 조회
     @GetMapping
     public List<FindAllPostResponseDto> findAllPostAPI() {
-        List<FindAllPostResponseDto> postListResponseDtoList = postServiceJW.findAllPost();
-        return postListResponseDtoList;
+        List<FindAllPostResponseDto> findAllPostDto = postServiceJW.findAllPost();
+        return findAllPostDto;
     }
 
     // 게시글 단건 조회
     @GetMapping("/{postId}")
     public FindPostResponseDto findPostAPI(@PathVariable Long postId) {
-        FindPostResponseDto postDetailResponseDto = postServiceJW.findPost(postId);
-        return postDetailResponseDto;
+        FindPostResponseDto findPostDto = postServiceJW.findPost(postId);
+        return findPostDto;
     }
 
 
     // 게시글 수정
     @PatchMapping("/{postId}")
     public ResponseEntity<UpdatePostResponseDto> updatePostAPI(
-            @PathVariable("postId") Long postId,
-            @RequestBody UpdatePostRequestDto updatePostRequestDto,
-            HttpServletRequest request
+            @PathVariable Long postId,
+            @RequestBody UpdatePostRequestDto updatePostRequestDto
     ) {
-        // 1. Authorization 헤더에서 JWT 토큰 추출
-        String token = request.getHeader("Authorization");
 
-        // JWT 토큰이 없거나, 접두사 "Bearer "로 시작하지 않으면
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new CustomException(ErrorCode.TOKEN_NOT_FOUND); // 토큰 존재하지 않는다는 예외 처리
-        }
-        token = token.substring(7); // "Bearer " 부분 제외
+        UpdatePostResponseDto updatePostDto = postServiceJW.updatePost(postId, updatePostRequestDto);
+        return ResponseEntity.ok(updatePostDto);
 
-        // 게시글 수정 서비스 호출
-        UpdatePostResponseDto updatePost = postServiceJW.updatePost(token, postId, updatePostRequestDto);
-
-        return new ResponseEntity<>(updatePost, HttpStatus.OK);
     }
 
 }
+
