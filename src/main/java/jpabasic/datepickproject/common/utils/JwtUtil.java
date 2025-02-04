@@ -32,8 +32,8 @@ public class JwtUtil {
 		this.abstractErrorController = abstractErrorController;
 	}
 
-	// 토큰 생성
-	public String createToken(String email){
+	// JWT 토큰 생성
+	public String createToken(Long userId, String email) {
 		Date date = new Date();
 
 		// 권한부여 : role 기본값을 'USER'로 설정
@@ -41,7 +41,8 @@ public class JwtUtil {
 
 		return BEARER_PREFIX +
 			Jwts.builder()
-				.setSubject(email) // 사용자 식별자
+				.setSubject(email)  // 사용자 식별자 (이메일)
+				.claim("userId", userId)  // 'userId'를 Long 타입으로 클레임에 추가
 				.claim("role", userRole)  // 사용자 역할을 클레임에 추가
 				.setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 토큰의 만료시간
 				.setIssuedAt(date) // 토큰 발급 시점
@@ -49,13 +50,13 @@ public class JwtUtil {
 				.compact();
 	}
 
-	// JWT 토큰에서 이메일 추출
-	public String getEmailFromToken(String token) {
+	// JWT 토큰에서 userId 추출
+	public Long getUserIdFromToken(String token) {
 		return Jwts.parser()
 			.setSigningKey(secretKey)
 			.parseClaimsJws(token)
 			.getBody()
-			.getSubject();
+			.get("userId", Long.class);  // userId를 Long 타입으로 추출
 	}
 
 	// 토큰 유효성 검사
