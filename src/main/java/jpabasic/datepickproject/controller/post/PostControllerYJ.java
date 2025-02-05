@@ -60,6 +60,13 @@ public class PostControllerYJ {
 	}
 
 	// post 검색(키워드 다건 조회)
+	/**
+	 * 포스트맨
+	 * GET  http://localhost:8080/api/posts/v1
+	 * 헤더 -> Content-Type : application/json;charset=UTF-8
+	 * Authorization -> Bearer Token / 로그인 시 나오는 jwt 토큰 값 넣기
+	 * Query Params -> (예시) keyword : 서울, page : 1, size : 2
+	 */
 	@GetMapping("/v1")
 	public ResponseEntity<Page<FindPostResponseDto>> searchPostAPI(
 		@RequestParam(required = false) String keyword,
