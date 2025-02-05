@@ -1,12 +1,15 @@
 package jpabasic.datepickproject.controller.post;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +17,7 @@ import jakarta.validation.Valid;
 import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
+import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
 import jpabasic.datepickproject.service.post.PostServiceYJ;
 import lombok.RequiredArgsConstructor;
 
@@ -52,6 +56,18 @@ public class PostControllerYJ {
 		DeletePostResponseDto responseDto = postServiceYJ.deletePostService(postId, userId);
 
 		// HTTP 상태 코드 200(ok)와 함께 responseDto 응답
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+		return ResponseEntity.ok(responseDto);
 	}
+
+	// post 검색(키워드 다건 조회)
+	@GetMapping("/v1")
+	public ResponseEntity<Page<FindPostResponseDto>> searchPostAPI(
+		@RequestParam(required = false) String keyword,
+		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "10") int size
+	) {
+		Page<FindPostResponseDto> foundPost = postServiceYJ.searchPostService(keyword, page, size);
+		return ResponseEntity.ok(foundPost);
+	}
+
 }

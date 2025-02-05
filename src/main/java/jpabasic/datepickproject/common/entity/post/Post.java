@@ -62,7 +62,8 @@ public class Post extends BaseEntity {
 	private String content;
 
 	// 게시글에 표시 되는 좋아요 수
-	private Long likeCount = 0L;
+	@Column(name = "like_count", nullable = false)
+	private long likeCount = 0L; // 기본값 0
 
 	// 소프트 딜리트(기본값 false | true: 삭제된 post 의미)
 	//베이스 엔티티에 메서드 만들어서 사용.
@@ -78,7 +79,9 @@ public class Post extends BaseEntity {
 		this.title = title;
 		this.content = content;
 	}
-
-	public void changePostLike(Long likeCount) {
+  
+	// 좋아요 수
+	public void changePostLike(long likeCount) {
 		this.likeCount = likeCount;
 	}
+}
