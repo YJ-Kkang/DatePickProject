@@ -86,7 +86,10 @@ public class PostServiceYJ {
 		Page<Post> posts = postRepositoryYJ.searchPosts(keyword, pageable);
 
 		// Entity → DTO 변환
-		return posts.map(FindPostResponseDto::new); // == new FindPostResponseDto(posts.map());
-
+		return posts.map(post -> new FindPostResponseDto(post, post.getLikeCount())); // == new FindPostResponseDto(posts.map());
 	}
+
+	// 인기 검색어 기능
+
+
 }
