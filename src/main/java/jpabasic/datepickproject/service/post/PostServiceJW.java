@@ -34,7 +34,7 @@ public class PostServiceJW {
         for (Post post : postList) {
 
             // 게시글의 좋아요 개수 조회
-            Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(post.getId());
+            Long likeCount = post.getLikeCount();
             findAllPostResponseDtoList.add(new FindAllPostResponseDto(post, likeCount));
         }
 
@@ -51,7 +51,7 @@ public class PostServiceJW {
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         // 게시글의 좋아요 개수 조회
-        Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(postId);
+        Long likeCount = post.getLikeCount();
 
         FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post, likeCount);
         return findPostResponseDto;
