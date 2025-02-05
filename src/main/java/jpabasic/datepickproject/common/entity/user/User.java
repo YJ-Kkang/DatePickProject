@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jpabasic.datepickproject.common.BaseEntity;
+import jpabasic.datepickproject.dto.user.requset.UpdateUserRequestDto;
 import lombok.Getter;
 
 @Entity
@@ -67,5 +68,10 @@ public class User extends BaseEntity {
 
 	public void inActivate() {
 		this.active = false;
+	}
+
+	public void updateUser(UpdateUserRequestDto updateUserRequestDto) {
+		this.email = updateUserRequestDto.getEmail();
+		this.userName = updateUserRequestDto.getUsername();
 	}
 }
