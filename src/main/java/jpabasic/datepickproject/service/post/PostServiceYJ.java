@@ -4,10 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jpabasic.datepickproject.common.entity.post.Post;
+import jpabasic.datepickproject.common.entity.user.User;
+import jpabasic.datepickproject.common.exception.CustomException;
+import jpabasic.datepickproject.common.exception.ErrorCode;
 import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
 import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,10 +30,10 @@ public class PostServiceYJ {
 	) {
 		// 유저 id 검증(todo 추후 필터 단에서 로그인할 때 유저 id 검증이 되는 구조라면 아래 로직 삭제할 것 -> 바로 post 생성 로직 시작)
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.")); // todo 추후 커스텀 예외 처리로 변경(UserNotFoundException)
+			.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
 		// post 생성
-		Post newPost = new Post(requestDto.getTitle(), requestDto.getContent());
+		Post newPost = new Post(user, requestDto.getTitle(), requestDto.getContent());
 
 		// repository에 post 저장
 		Post savedPost = postRepositoryYJ.save(newPost);
@@ -43,17 +47,17 @@ public class PostServiceYJ {
 	public DeletePostResponseDto deletePostService(Long postId, Long userId) {
 		// 포스트 id 검증
 		Post findPost = postRepositoryYJ.findById(postId)
-			.orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")); // todo 추후 커스텀 예외 처리로 변경(PostNotFoundException)
+			.orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
 		// 작성자 검증(post 작성한 유저와 삭제하려는 유저가 동일인인지 확인)
 		boolean isNotAuthor = !findPost.getUser().getId().equals(userId);
 		if(isNotAuthor) {
-			throw new IllegalArgumentException("본인이 작성하지 않은 게시글은 삭제할 수 없습니다."); // todo 추후 커스텀 예외 처리로 변경(UnauthorizedPostAccessException)
+			throw new CustomException(ErrorCode.POST_DELETION_NOT_AUTHORIZED);
 		}
 
 		// 이미 삭제된 게시글 예외 처리 (isDeleted = false가 기본 값, true면 이미 삭제된 게시글)
 		if (findPost.isDeleted()) {
-			throw new IllegalArgumentException("이미 삭제된 게시글입니다."); // todo 추후 커스텀 예외 처리로 변경(AlreadyDeletedPostException)
+			throw new CustomException(ErrorCode.POST_IS_DELETE);
 		}
 
 		// 소프트 딜리트 처리

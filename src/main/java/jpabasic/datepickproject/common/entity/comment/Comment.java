@@ -13,10 +13,12 @@ import jpabasic.datepickproject.common.BaseEntity;
 import jpabasic.datepickproject.common.entity.post.Post;
 import jpabasic.datepickproject.common.entity.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "Comment")
+@NoArgsConstructor
+@Table(name = "COMMENT")
 public class Comment extends BaseEntity {
 
 	@Id
@@ -31,7 +33,17 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "post_id")
 	private Post post;
 
-	@Column(name = "contnet")
+	@Column(name = "content")
 	private String content;
+
+	public Comment(User user, Post post, String content) {
+		this.user = user;
+		this.post = post;
+		this.content = content;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 }
 

@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Getter
 @Entity
 @Table(name = "POST")
@@ -67,7 +68,13 @@ public class Post extends BaseEntity {
 	//베이스 엔티티에 메서드 만들어서 사용.
 
 	// 생성자
-	public Post(String title, String content) {
+	public Post(User user, String title, String content) {
+		this.user = user;
+		this.title = title;
+		this.content = content;
+	}
+
+	public void updatePost(String title, String content) {
 		this.title = title;
 		this.content = content;
 	}
@@ -75,6 +82,3 @@ public class Post extends BaseEntity {
 	public void changePostLike(Long likeCount) {
 		this.likeCount = likeCount;
 	}
-
-
-}

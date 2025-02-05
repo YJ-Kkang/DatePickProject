@@ -27,6 +27,10 @@ public class JwtFilter implements Filter {
 		"/api/auth/users/signin"
 	};
 
+	private static final String[] USER_SEARCH_URI = {
+		"/api/auth/users/search"
+	};
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
@@ -38,7 +42,7 @@ public class JwtFilter implements Filter {
 		String requestURI = httpRequest.getRequestURI();
 
 		// 회원가입 또는 로그인 URI일 경우, JWT 인증 없이 그냥 필터를 통과시킴
-		if (isSignUpURI(requestURI) || isSignInURI(requestURI)) {
+		if (isSignUpURI(requestURI) || isSignInURI(requestURI) || isUserSearchURI(requestURI)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -49,11 +53,15 @@ public class JwtFilter implements Filter {
 		// 2. 토큰이 있으면, 유효성 검증
 		if (token != null && jwtUtil.validateToken(token)) {
 
-			// 3. 유효한 토큰이면 이메일 추출
-			String email = jwtUtil.getEmailFromToken(token);
+			// 3. 유효한 토큰이면 유저 아이디 추출
+			Long userId = jwtUtil.getUserIdFromToken(token);
 
-			// 4. 인증 정보 설정 (여기서는 SecurityContext 없이 직접 인증 처리를 하지 않음)
-			System.out.println("인증된 사용자: " + email);
+			// request를 통해 유저 아이디를 넣어주는 로직 구현
+			request.setAttribute("userId", userId);
+
+			// 인증 정보 설정
+			System.out.println("인증된 사용자 아이디: " + userId);
+
 		} else {
 
 			// 5. 토큰이 없거나 유효하지 않으면, 인증 실패 처리 (예시로 401 Unauthorized 반환)
@@ -83,6 +91,11 @@ public class JwtFilter implements Filter {
 	// requestURI가 로그인 URI인지 확인
 	public boolean isSignInURI(String requestURI) {
 		return PatternMatchUtils.simpleMatch(SIGN_IN_URI, requestURI);
+	}
+
+	// requestURI가 조회 URI인지 확인
+	public boolean isUserSearchURI(String requestURI) {
+		return PatternMatchUtils.simpleMatch(USER_SEARCH_URI, requestURI);
 	}
 
 }
