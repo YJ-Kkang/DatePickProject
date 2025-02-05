@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-	List<Comment> findByPostId(Long postId);
 	// 삭제되지 않은 댓글만 조회
 	List<Comment> findByPostIdAndIsDeletedFalse(Long postId);
 

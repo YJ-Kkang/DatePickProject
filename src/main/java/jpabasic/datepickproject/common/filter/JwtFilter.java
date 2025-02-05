@@ -27,6 +27,10 @@ public class JwtFilter implements Filter {
 		"/api/auth/users/signin"
 	};
 
+	private static final String[] USER_SEARCH_URI = {
+		"/api/auth/users/search"
+	};
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
@@ -38,7 +42,7 @@ public class JwtFilter implements Filter {
 		String requestURI = httpRequest.getRequestURI();
 
 		// 회원가입 또는 로그인 URI일 경우, JWT 인증 없이 그냥 필터를 통과시킴
-		if (isSignUpURI(requestURI) || isSignInURI(requestURI)) {
+		if (isSignUpURI(requestURI) || isSignInURI(requestURI) || isUserSearchURI(requestURI)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -87,6 +91,11 @@ public class JwtFilter implements Filter {
 	// requestURI가 로그인 URI인지 확인
 	public boolean isSignInURI(String requestURI) {
 		return PatternMatchUtils.simpleMatch(SIGN_IN_URI, requestURI);
+	}
+
+	// requestURI가 조회 URI인지 확인
+	public boolean isUserSearchURI(String requestURI) {
+		return PatternMatchUtils.simpleMatch(USER_SEARCH_URI, requestURI);
 	}
 
 }
