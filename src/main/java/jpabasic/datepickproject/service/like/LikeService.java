@@ -55,6 +55,13 @@ public class LikeService {
 			post.changePostLike(post.getLikeCount() + 1);
 		}
 
+		// 좋아요 개수를 다시 조회
+		Long updatedLikeCount = likeRepository.countByPostIdAndLikeStatusTrue(postId);
+		// 조회한 변경된 좋아요 개수 업데이트
+		post.changePostLike(updatedLikeCount);
+		// 변경된 좋아요 개수가 업데이트된 게시글 저장
+		postRepositoryYJ.save(post);
+
 		return new LikeStatusResponseDto(optionalLike.get().checkLike(), post);
 	}
 }

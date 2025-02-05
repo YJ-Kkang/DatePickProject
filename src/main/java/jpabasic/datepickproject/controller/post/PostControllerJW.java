@@ -26,6 +26,7 @@ public class PostControllerJW {
         return findAllPostDto;
     }
 
+
     // 게시글 단건 조회
     @GetMapping("/{postId}")
     public FindPostResponseDto findPostAPI(@PathVariable Long postId) {

@@ -13,11 +13,11 @@ public class FindPostResponseDto {
     private final LocalDateTime createdAt;
     private final Long likeCount;
 
-    public FindPostResponseDto(Post post) {
+    public FindPostResponseDto(Post post, Long likeCount) {
         this.userName = post.getUser().getUserName();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
-        this.likeCount = post.getLikeCount();
+        this.likeCount = likeCount;
     }
 }

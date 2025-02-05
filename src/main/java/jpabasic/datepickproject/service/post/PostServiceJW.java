@@ -2,7 +2,6 @@ package jpabasic.datepickproject.service.post;
 
 import jpabasic.datepickproject.common.entity.post.Post;
 import jpabasic.datepickproject.common.entity.user.User;
-import jpabasic.datepickproject.common.utils.JwtUtil;
 import jpabasic.datepickproject.dto.post.request.UpdatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.FindAllPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,22 +24,22 @@ public class PostServiceJW {
     private final PostRepositoryYJ postRepositoryYJ;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
-    private final JwtUtil jwtUtil;
 
-    // 게시글 다건 조회
+    // 게시글 다건 조회 (좋아요 내림차순)
     public List<FindAllPostResponseDto> findAllPost() {
-        // 게시글 조회하고
+        // 모든 게시글 조회
         List<Post> postList = postRepositoryYJ.findAll();
         List<FindAllPostResponseDto> findAllPostResponseDtoList = new ArrayList<>();
 
-        // for 문을 사용하여 변환
         for (Post post : postList) {
 
             // 게시글의 좋아요 개수 조회
             Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(post.getId());
-
-            findAllPostResponseDtoList.add(new FindAllPostResponseDto(post));
+            findAllPostResponseDtoList.add(new FindAllPostResponseDto(post, likeCount));
         }
+
+        // 좋아요 개수 내림차순 정렬
+        findAllPostResponseDtoList.sort((p1, p2) -> Long.compare(p2.getLikeCount(), p1.getLikeCount()));
 
         return findAllPostResponseDtoList;
     }
@@ -55,11 +53,11 @@ public class PostServiceJW {
         // 게시글의 좋아요 개수 조회
         Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(postId);
 
-        FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post);
+        FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post, likeCount);
         return findPostResponseDto;
     }
 
-
+    // 게시글 수정
     @Transactional
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto) {
 

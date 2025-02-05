@@ -2,14 +2,11 @@ package jpabasic.datepickproject.common.entity.post;
 
 import jakarta.persistence.*;
 import jpabasic.datepickproject.common.BaseEntity;
-import jpabasic.datepickproject.common.entity.like.Like;
 import jpabasic.datepickproject.common.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Getter
