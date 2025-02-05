@@ -69,5 +69,4 @@ public class PostControllerYJ {
 		Page<FindPostResponseDto> foundPost = postServiceYJ.searchPostService(keyword, page, size);
 		return ResponseEntity.ok(foundPost);
 	}
-
 }
