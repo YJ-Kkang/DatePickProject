@@ -7,6 +7,7 @@ import jpabasic.datepickproject.dto.post.request.UpdatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.FindAllPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.UpdatePostResponseDto;
+import jpabasic.datepickproject.repository.like.LikeRepository;
 import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class PostServiceJW {
 
     private final PostRepositoryYJ postRepositoryYJ;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
     private final JwtUtil jwtUtil;
 
     // 게시글 다건 조회
@@ -34,6 +36,10 @@ public class PostServiceJW {
 
         // for 문을 사용하여 변환
         for (Post post : postList) {
+
+            // 게시글의 좋아요 개수 조회
+            Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(post.getId());
+
             findAllPostResponseDtoList.add(new FindAllPostResponseDto(post));
         }
 
@@ -41,11 +47,13 @@ public class PostServiceJW {
     }
 
 
-
     // 게시글 단건 조회
     public FindPostResponseDto findPost(Long postId) {
         Post post = postRepositoryYJ.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // 게시글의 좋아요 개수 조회
+        Long likeCount = likeRepository.countByPostIdAndLikeStatusTrue(postId);
 
         FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post);
         return findPostResponseDto;
