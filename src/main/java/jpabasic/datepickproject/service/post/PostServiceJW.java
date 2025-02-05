@@ -7,7 +7,7 @@ import jpabasic.datepickproject.dto.post.response.FindAllPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.UpdatePostResponseDto;
 import jpabasic.datepickproject.repository.like.LikeRepository;
-import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.post.PostRepository;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +21,14 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PostServiceJW {
 
-    private final PostRepositoryYJ postRepositoryYJ;
+    private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
 
     // 게시글 다건 조회 (좋아요 내림차순)
     public List<FindAllPostResponseDto> findAllPost() {
         // 모든 게시글 조회
-        List<Post> postList = postRepositoryYJ.findAll();
+        List<Post> postList = postRepository.findAll();
         List<FindAllPostResponseDto> findAllPostResponseDtoList = new ArrayList<>();
 
         for (Post post : postList) {
@@ -47,7 +47,7 @@ public class PostServiceJW {
 
     // 게시글 단건 조회
     public FindPostResponseDto findPost(Long postId) {
-        Post post = postRepositoryYJ.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         // 게시글의 좋아요 개수 조회
@@ -69,7 +69,7 @@ public class PostServiceJW {
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         // 포스트를 조회 -> 없으면 예외 발생
-        Post post = postRepositoryYJ.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
 
