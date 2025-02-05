@@ -14,16 +14,16 @@ import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
-import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.post.PostRepository;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PostServiceYJ {
+public class PostService {
 
-	private final PostRepositoryYJ postRepositoryYJ;
+	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 
 	// post 생성
@@ -40,7 +40,7 @@ public class PostServiceYJ {
 		Post newPost = new Post(user, requestDto.getTitle(), requestDto.getContent());
 
 		// repository에 post 저장
-		Post savedPost = postRepositoryYJ.save(newPost);
+		Post savedPost = postRepository.save(newPost);
 
 		// 컨트롤러 단으로 dto 넘기기
 		return new CreatePostResponseDto(savedPost);
@@ -50,7 +50,7 @@ public class PostServiceYJ {
 	@Transactional
 	public DeletePostResponseDto deletePostService(Long postId, Long userId) {
 		// 포스트 id 검증
-		Post findPost = postRepositoryYJ.findById(postId)
+		Post findPost = postRepository.findById(postId)
 			.orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
 		// 작성자 검증(post 작성한 유저와 삭제하려는 유저가 동일인인지 확인)
@@ -67,7 +67,7 @@ public class PostServiceYJ {
 		// 소프트 딜리트 처리
 		// 포스트 삭제 시 isDeleted를 true로 변경(BaseEntity의 markAsDeleted() 활용) 후 저장
 		findPost.markAsDeleted();
-		postRepositoryYJ.save(findPost);
+		postRepository.save(findPost);
 
 		// 컨트롤러 단으로 dto 넘기기
 		return new DeletePostResponseDto(findPost);
@@ -83,7 +83,7 @@ public class PostServiceYJ {
 		Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size);
 
 		// 좋아요 수 기준으로 정렬된 게시글 검색
-		Page<Post> posts = postRepositoryYJ.searchPosts(keyword, pageable);
+		Page<Post> posts = postRepository.searchPosts(keyword, pageable);
 
 		// Entity → DTO 변환
 		return posts.map(post -> new FindPostResponseDto(post, post.getLikeCount())); // == new FindPostResponseDto(posts.map());

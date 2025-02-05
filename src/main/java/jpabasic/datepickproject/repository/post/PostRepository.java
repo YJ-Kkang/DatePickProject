@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import jpabasic.datepickproject.common.entity.post.Post;
 
-public interface PostRepositoryYJ extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
 	// post 검색(키워드 다건 조회)
 	@Query("""

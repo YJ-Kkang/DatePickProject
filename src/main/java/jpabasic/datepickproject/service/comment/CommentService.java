@@ -7,7 +7,7 @@ import jpabasic.datepickproject.common.entity.comment.Comment;
 import jpabasic.datepickproject.common.entity.post.Post;
 import jpabasic.datepickproject.common.entity.user.User;
 import jpabasic.datepickproject.repository.comment.CommentRepository;
-import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.post.PostRepository;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 public class CommentService {
 
 	private final CommentRepository commentRepository;
-	private final PostRepositoryYJ postRepositoryYJ;
+	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 
 	// 댓글 생성
 	@Transactional
 	public CommentResponse createComment(Long postId, Long userId, CommentRequest request) {
-		Post post = postRepositoryYJ.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("포스트를 찾을 수 없습니다."));
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));

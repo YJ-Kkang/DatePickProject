@@ -12,7 +12,7 @@ import jpabasic.datepickproject.common.exception.CustomException;
 import jpabasic.datepickproject.common.exception.ErrorCode;
 import jpabasic.datepickproject.dto.like.LikeStatusResponseDto;
 import jpabasic.datepickproject.repository.like.LikeRepository;
-import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
+import jpabasic.datepickproject.repository.post.PostRepository;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LikeService {
 
 	private final LikeRepository likeRepository;
-	private final PostRepositoryYJ postRepositoryYJ;
+	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 
 	// 좋아요 상태 변경
@@ -32,7 +32,7 @@ public class LikeService {
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-		Post post = postRepositoryYJ.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
 		// 기존의 좋아요 정보를 확인

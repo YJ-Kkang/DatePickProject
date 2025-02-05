@@ -18,14 +18,14 @@ import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
-import jpabasic.datepickproject.service.post.PostServiceYJ;
+import jpabasic.datepickproject.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class PostControllerYJ {
-	private final PostServiceYJ postServiceYJ;
+public class PostController {
+	private final PostService postService;
 
 	// post 생성
 	@PostMapping
@@ -37,7 +37,7 @@ public class PostControllerYJ {
 		Long userId = (Long) request.getAttribute("userId");
 
 		// userId를 서비스 단으로 넘겨서 검증 및 post 생성 진행
-		CreatePostResponseDto responseDto = postServiceYJ.createPostService(userId, requestDto);
+		CreatePostResponseDto responseDto = postService.createPostService(userId, requestDto);
 
 		// HTTP 상태 코드 201(create)와 함께 responseDto 응답
 		return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -53,20 +53,27 @@ public class PostControllerYJ {
 		Long userId = (Long) request.getAttribute("userId");
 
 		// postId를 서비스 단으로 넘겨서 검증 및 post 삭제 진행
-		DeletePostResponseDto responseDto = postServiceYJ.deletePostService(postId, userId);
+		DeletePostResponseDto responseDto = postService.deletePostService(postId, userId);
 
 		// HTTP 상태 코드 200(ok)와 함께 responseDto 응답
 		return ResponseEntity.ok(responseDto);
 	}
 
 	// post 검색(키워드 다건 조회)
+	/**
+	 * 포스트맨
+	 * GET  http://localhost:8080/api/posts/v1
+	 * 헤더 -> Content-Type : application/json;charset=UTF-8
+	 * Authorization -> Bearer Token / 로그인 시 나오는 jwt 토큰 값 넣기
+	 * Query Params -> (예시) keyword : 서울, page : 1, size : 2
+	 */
 	@GetMapping("/v1")
 	public ResponseEntity<Page<FindPostResponseDto>> searchPostAPI(
 		@RequestParam(required = false) String keyword,
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "10") int size
 	) {
-		Page<FindPostResponseDto> foundPost = postServiceYJ.searchPostService(keyword, page, size);
+		Page<FindPostResponseDto> foundPost = postService.searchPostService(keyword, page, size);
 		return ResponseEntity.ok(foundPost);
 	}
 
