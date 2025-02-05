@@ -52,7 +52,8 @@ public class LikeService {
 		// isPresent 는 값이 있을 때 true isEmpty 는 값이 없을 때
 		if (optionalLike.isPresent()) {
 			// 이미 좋아요가 있다면 -> 상태 변경 (좋아요 취소 혹은 다시 좋아요로 상태 변경이 가능함)
-			like.switchLike();
+            like.switchLike();
+
 			/**
 			 * 좋아요 상태 변경에 따라 게시글 좋아요 개수 조정
 			 * likeStatus 의 상태가 true 면 ?뒤의 코드가 작동하고 false 면 : 뒤에 코드가 작동하는 방식의 삼항 연산자임.

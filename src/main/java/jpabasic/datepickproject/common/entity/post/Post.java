@@ -1,19 +1,12 @@
 package jpabasic.datepickproject.common.entity.post;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jpabasic.datepickproject.common.BaseEntity;
 import jpabasic.datepickproject.common.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 
 @Getter
@@ -65,6 +58,7 @@ public class Post extends BaseEntity {
 	@Column(name = "like_count", nullable = false)
 	private long likeCount = 0L; // 기본값 0
 
+
 	// 소프트 딜리트(기본값 false | true: 삭제된 post 의미)
 	//베이스 엔티티에 메서드 만들어서 사용.
 
@@ -73,6 +67,7 @@ public class Post extends BaseEntity {
 		this.user = user;
 		this.title = title;
 		this.content = content;
+		this.likeCount = 0L;
 	}
 
 	public void updatePost(String title, String content) {

@@ -2,11 +2,11 @@ package jpabasic.datepickproject.service.post;
 
 import jpabasic.datepickproject.common.entity.post.Post;
 import jpabasic.datepickproject.common.entity.user.User;
-import jpabasic.datepickproject.common.utils.JwtUtil;
 import jpabasic.datepickproject.dto.post.request.UpdatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.FindAllPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
 import jpabasic.datepickproject.dto.post.response.UpdatePostResponseDto;
+import jpabasic.datepickproject.repository.like.LikeRepository;
 import jpabasic.datepickproject.repository.post.PostRepositoryYJ;
 import jpabasic.datepickproject.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,22 +23,26 @@ public class PostServiceJW {
 
     private final PostRepositoryYJ postRepositoryYJ;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final LikeRepository likeRepository;
 
-    // 게시글 다건 조회
+    // 게시글 다건 조회 (좋아요 내림차순)
     public List<FindAllPostResponseDto> findAllPost() {
-        // 게시글 조회하고
+        // 모든 게시글 조회
         List<Post> postList = postRepositoryYJ.findAll();
         List<FindAllPostResponseDto> findAllPostResponseDtoList = new ArrayList<>();
 
-        // for 문을 사용하여 변환
         for (Post post : postList) {
-            findAllPostResponseDtoList.add(new FindAllPostResponseDto(post));
+
+            // 게시글의 좋아요 개수 조회
+            Long likeCount = post.getLikeCount();
+            findAllPostResponseDtoList.add(new FindAllPostResponseDto(post, likeCount));
         }
+
+        // 좋아요 개수 내림차순 정렬
+        findAllPostResponseDtoList.sort((p1, p2) -> Long.compare(p2.getLikeCount(), p1.getLikeCount()));
 
         return findAllPostResponseDtoList;
     }
-
 
 
     // 게시글 단건 조회
@@ -47,11 +50,14 @@ public class PostServiceJW {
         Post post = postRepositoryYJ.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post);
+        // 게시글의 좋아요 개수 조회
+        Long likeCount = post.getLikeCount();
+
+        FindPostResponseDto findPostResponseDto = new FindPostResponseDto(post, likeCount);
         return findPostResponseDto;
     }
 
-
+    // 게시글 수정
     @Transactional
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto) {
 
