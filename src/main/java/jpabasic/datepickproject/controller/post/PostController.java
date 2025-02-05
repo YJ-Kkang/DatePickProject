@@ -1,25 +1,19 @@
 package jpabasic.datepickproject.controller.post;
 
+import jpabasic.datepickproject.dto.post.request.UpdatePostRequestDto;
+import jpabasic.datepickproject.dto.post.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jpabasic.datepickproject.dto.post.request.CreatePostRequestDto;
-import jpabasic.datepickproject.dto.post.response.CreatePostResponseDto;
-import jpabasic.datepickproject.dto.post.response.DeletePostResponseDto;
-import jpabasic.datepickproject.dto.post.response.FindPostResponseDto;
 import jpabasic.datepickproject.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -41,6 +35,39 @@ public class PostController {
 
 		// HTTP 상태 코드 201(create)와 함께 responseDto 응답
 		return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+	}
+
+	// 게시글 다건 조회
+	@GetMapping
+	public List<FindAllPostResponseDto> findAllPostAPI() {
+		List<FindAllPostResponseDto> findAllPostDto = postService.findAllPost();
+		return findAllPostDto;
+	}
+
+
+	// 게시글 단건 조회
+	@GetMapping("/{postId}")
+	public FindPostResponseDto findPostAPI(@PathVariable Long postId) {
+		FindPostResponseDto findPostDto = postService.findPost(postId);
+		return findPostDto;
+	}
+
+
+	// 게시글 수정
+	@PatchMapping("/{postId}")
+	public ResponseEntity<UpdatePostResponseDto> updatePostAPI(
+			@PathVariable Long postId,
+			@RequestBody UpdatePostRequestDto updatePostRequestDto,
+			HttpServletRequest request // 필터에서 저장한 유저 아이디 가져옴
+	) {
+
+		// 필터에서 저장한 유저 아이디 가져옴 -> 포스트 수정 서비스 호출 -> 응답 반환
+		Long userId = (Long) request.getAttribute("userId");
+
+
+		UpdatePostResponseDto updatePostDto = postService.updatePost(postId, updatePostRequestDto);
+		return ResponseEntity.ok(updatePostDto);
+
 	}
 
 	// post 삭제(소프트 딜리트 사용)
