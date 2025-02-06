@@ -2,7 +2,10 @@ package jpabasic.datepickproject.controller.post;
 
 import jpabasic.datepickproject.dto.post.request.UpdatePostRequestDto;
 import jpabasic.datepickproject.dto.post.response.*;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -94,6 +97,7 @@ public class PostController {
 	 * Authorization -> Bearer Token / 로그인 시 나오는 jwt 토큰 값 넣기
 	 * Query Params -> (예시) keyword : 서울, page : 1, size : 2
 	 */
+	// 캐시 미적용
 	@GetMapping("/v1")
 	public ResponseEntity<Page<FindPostResponseDto>> searchPostAPI(
 		@RequestParam(required = false) String keyword,
@@ -103,5 +107,18 @@ public class PostController {
 		Page<FindPostResponseDto> foundPost = postService.searchPostService(keyword, page, size);
 		return ResponseEntity.ok(foundPost);
 	}
+
+	// 인메모리 캐시 적용
+	@Cacheable(value = "searchCache", key = "#keyword + '-' + #page + '-' + #size")
+	@GetMapping("/v2")
+	public ResponseEntity<Page<FindPostResponseDto>> searchPostAPIV2(
+		@RequestParam(required = false) String keyword,
+		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "10") int size
+		) {
+		Page<FindPostResponseDto> foundPostV2 = postService.searchPostService(keyword, page, size);
+		return ResponseEntity.ok(foundPostV2);
+	}
+
 
 }
