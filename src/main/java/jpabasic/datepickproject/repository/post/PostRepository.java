@@ -14,7 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Query("""
 		      SELECT p FROM Post p
 		      LEFT JOIN FETCH p.user u
-		      WHERE (:keyword IS NULL OR p.title LIKE %:keyword% OR p.content LIKE %:keyword%)
+		      WHERE (:keyword IS NULL OR :keyword = '' OR p.title LIKE %:keyword% OR p.content LIKE %:keyword%)
 		      ORDER BY p.likeCount DESC, p.createdAt DESC
 		""") // 좋아요 수 기준 내림차순 정렬, 같은 좋아요 수라면 작성일 기준 내림차순 정렬
 	Page<Post> searchPosts(@Param("keyword") String keyword, Pageable pageable); // page로 뱉으려면 Pageable을 줘야 한다
