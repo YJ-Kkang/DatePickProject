@@ -75,7 +75,7 @@ public class JwtFilter implements Filter {
 	}
 
 	// 7. 요청 헤더에서 JWT 토큰 추출하는 메소드
-	private String extractToken(HttpServletRequest request) {
+	public static String extractToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
 		if (header != null && header.startsWith("Bearer ")) {
 			return header.substring(7); // "Bearer "를 제외하고 토큰만 추출

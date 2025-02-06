@@ -2,8 +2,6 @@ package jpabasic.datepickproject.service.user;
 
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jpabasic.datepickproject.common.entity.user.User;
@@ -25,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserAuthService {
 
 	private final UserRepository userRepository;
+	private final UserService userService;
 	private final JwtUtil jwtUtil;
 	PasswordEncoder bcrypt = new PasswordEncoder();
 
@@ -78,7 +77,7 @@ public class UserAuthService {
 		Long userId = jwtUtil.getUserIdFromToken(token);  // userId로 변경
 
 		// 2. 비밀번호 확인
-		User user = findUserById(userId);  // 이제 이메일이 아니라 userId로 사용자 찾기
+		User user = userService.findUserById(userId);  // 이제 이메일이 아니라 userId로 사용자 찾기
 		boolean passwordMatches = bcrypt.matches(password, user.getPassword());
 		if (!passwordMatches) {
 			throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 비밀번호가 일치하지 않으면 예외 발생
@@ -89,24 +88,6 @@ public class UserAuthService {
 		userRepository.save(user);  // DB에 반영
 
 		log.info("사용자가 탈퇴했습니다. userId: {}", userId);
-	}
-
-	public User findUserById(Long userId) {
-
-		// userId로 사용자 존재 여부 확인
-		Optional<User> existingUser = userRepository.findById(userId);
-
-		// userId가 존재하지 않으면 예외 처리
-		if (existingUser.isEmpty()) {
-			log.info("사용자를 찾을 수 없습니다. userId: {}", userId);
-			throw new CustomException(ErrorCode.USER_NOT_FOUND);  // 사용자를 찾을 수 없으면 예외 처리
-		}
-		return existingUser.get();
-	}
-
-	// 이메일 또는 사용자명으로 부분일치 검색 후 페이징 처리 된 값 반환
-	public Page<User> searchMatchedUsers(String username, String email, Pageable pageable) {
-		return userRepository.findByEmailContainingOrUserNameContaining(username, email, pageable);
 	}
 
 }
