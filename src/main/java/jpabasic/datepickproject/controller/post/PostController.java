@@ -104,8 +104,4 @@ public class PostController {
 		return ResponseEntity.ok(foundPost);
 	}
 
-	// 인기 검색어 기능
-	// 키워드 별로 몇 번 호출됐나 기록, 그 개수로 조회
-
-
 }

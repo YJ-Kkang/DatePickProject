@@ -27,6 +27,7 @@ public class PostService {
 
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
+	private final SearchKeywordService searchKeywordService;
 
 	// post 생성
 	@Transactional
@@ -138,14 +139,16 @@ public class PostService {
 		// 1부터 시작하게 만듦 (정적 팩토리 메서드)
 		Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size);
 
+		// 검색된 키워드가 이미 존재하는지 확인 후, 키워드 저장(또는 키워드 검색 횟수 증가)
+		if (keyword != null && !keyword.isBlank()) {
+			searchKeywordService.saveOrUpdateSearchKeyword(keyword);
+		}
+
 		// 좋아요 수 기준으로 정렬된 게시글 검색
 		Page<Post> posts = postRepository.searchPosts(keyword, pageable);
 
 		// Entity → DTO 변환
 		return posts.map(post -> new FindPostResponseDto(post, post.getLikeCount())); // == new FindPostResponseDto(posts.map());
 	}
-
-	// 인기 검색어 기능
-
 
 }
