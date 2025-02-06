@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class KeywordController {
 	private final KeywordService keywordService;
 
-	// 역대 인기 키워드(검색어) 조회 API
+	// 역대 인기 키워드(검색어) 조회 기능
 	/**
 	 * - DB 기반으로 역대 검색어 TOP 10 조회
 	 * - 역대 인기 검색어 리스트 및 안내 메시지 반환
@@ -25,7 +25,5 @@ public class KeywordController {
 		SearchKeywordListResponseDto response = keywordService.getTop10SearchKeywords();
 		return ResponseEntity.ok(response);
 	}
-
-
 
 }

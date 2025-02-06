@@ -28,7 +28,7 @@ public class KeywordService {
 			);
 	}
 
-	// 역대 인기 키워드(검색어) 조회 API
+	// 역대 인기 키워드(검색어) 조회
 	// DB에서 검색어 TOP 10을 가져와 순위, 응답 메시지와 함께 반환
 	public SearchKeywordListResponseDto getTop10SearchKeywords() {
 		// DB에서 인기 키워드 TOP 10 가져옴.
