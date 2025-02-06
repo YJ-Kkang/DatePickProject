@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import jpabasic.datepickproject.common.entity.post.SearchKeyword;
 
-public interface SearchKeywordRepository extends JpaRepository<SearchKeyword, Long> {
+public interface KeywordRepository extends JpaRepository<SearchKeyword, Long> {
 
 	// 검색어가 DB에 존재하는지 확인
 	Optional<SearchKeyword> findByKeyword(String keyword);

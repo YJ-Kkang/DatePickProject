@@ -27,7 +27,7 @@ public class PostService {
 
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
-	private final SearchKeywordService searchKeywordService;
+	private final KeywordService keywordService;
 
 	// post 생성
 	@Transactional
@@ -141,7 +141,7 @@ public class PostService {
 
 		// 검색된 키워드가 이미 존재하는지 확인 후, 키워드 저장(또는 키워드 검색 횟수 증가)
 		if (keyword != null && !keyword.isBlank()) {
-			searchKeywordService.saveOrUpdateSearchKeyword(keyword);
+			keywordService.saveOrUpdateSearchKeyword(keyword);
 		}
 
 		// 좋아요 수 기준으로 정렬된 게시글 검색
