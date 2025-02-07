@@ -36,7 +36,7 @@
 ![img_4.png](img/img_4.png)
 ![img_5.png](img/img_5.png)
 ![img_6.png](img/img_6.png)
-![img_7.png](img/img_7.png)
+![img_7.png](img/img_7.png) 
 ---
 ## 2. Cache을 이용한 성능개선 프로젝트 (난이도 중)
 ### 필수 구현 기능
@@ -188,11 +188,20 @@ return new ConcurrentMapCacheManager("searchCache"); // 인메모리 캐시 설�
 
 - 검색 속도를 향상시키기 위해 적절한 인덱스를 설계해주세요.
 - 자주 사용되는 조건에 맞는 컬럼에 인덱스를 적용하여 대용량 데이터에서도 빠른 검색을 지원하세요.
-  - 유저 인덱싱 :
+
+**해결**
+- 유저와 댓글 부분에 인덱싱 설계를 구현하여 문제를 해결 하였습니다.
+  - 유저 인덱싱 설계 :
   [Click here to try](https://www.notion.so/teamsparta/DATE-PICK-Team-1-f795e00106e4436d8bf4cc2a0d82be0a?pvs=4#6dac0c89086c4cd494b166cf0c349161)
 
-  - 댓글 인덱싱 :
-   [Click here to try](https://www.notion.so/teamsparta/DATE-PICK-Team-1-f795e00106e4436d8bf4cc2a0d82be0a?pvs=4#03c940cc80524fb1ac5dff7efde7de1f)
+  - 댓글 인덱싱 설계 :
+  [Click here to try](https://www.notion.so/teamsparta/DATE-PICK-Team-1-f795e00106e4436d8bf4cc2a0d82be0a?pvs=4#03c940cc80524fb1ac5dff7efde7de1f)
 
-    
+---
+## 😼 후기
+- 민수 : 언제나 협업은 소통이 중요하다고 생각했으나 이번 프로젝트를 하면서 더욱 크게 와닿았던 거 같습니다 최종때는 조금 더 나서서 소통을 주도 할 수 있도록 최선을 다해볼 예정입니다.
+- 학산 : 이번 프로젝트에서 인덱싱, JWT 적용 등 처음으로 적용해 본 기능이 많았는데 팀원들과 협업 및 문제를 해결 할 수 있어 좋은 경험이 되었습니다! 
+- 유진 : post 생성 및 삭제와 인기검색어(캐싱)를 구현하면서 심도있게 학습할 수 있어서 뜻깊었고, 팀원들과의 협업의 중요성도 한 번 더 느꼈습니다.
+- 다빈 : 로그인 구현부터 인덱싱까지 여러 인사이트들을 얻고 가는 것 같아 값진 경험이었다. 협업의 과정에서 얻는 배움도 많았습니다. 고생하셨어요 1조!
+- 지원 : 이번 팀 프로젝트에서 토큰을 처음 적용해보고 인메모리 캐싱을 학습할 수 있는 경험을 할 수 있어서 좋았습니다.
 ---
